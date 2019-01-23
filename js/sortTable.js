@@ -3,11 +3,7 @@
 	let Table=GMOD("gui.Table");
 
 	SC=SC({
-		TableConfig:"gui.TableConfig.Select",
-		form:"gui.form",
-		action:"gui.actionize",
 		org:"Organizer",
-		fuzzy:"fuzzySearch",
 	});
 
 	let SortTable=µ.Class(Table,{
