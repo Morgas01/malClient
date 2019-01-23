@@ -1,0 +1,1 @@
+let service=module.exports=module.exports=µ.getModule("dependencyManager")(["js"],"js");

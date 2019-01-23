@@ -1,0 +1,7 @@
+{
+	"name": "malClient",
+	"version": "0.0.1",
+	"description": "myanimelist.net client for NIWA",
+	"keywords":["niwa","niwa-app","MAL","myanimelist"],
+	"license": "MIT"
+}

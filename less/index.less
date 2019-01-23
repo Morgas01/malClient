@@ -1,0 +1,21 @@
+@import "theme/default";
+
+.TableConfig {
+	width:100%;
+	tbody tr {
+		.zebra();
+		.selectable();
+	}
+}
+.anime_title {
+	position:relative;
+	img {
+		display:none;
+		position:absolute;
+		right:0;
+		z-index:1;
+	}
+	&:hover img {
+		display:block;
+	}
+}
