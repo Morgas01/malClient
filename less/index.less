@@ -1,10 +1,62 @@
 @import "theme/default";
 
-.TableConfig {
-	width:100%;
-	tbody tr {
-		.zebra();
-		.selectable();
+html,body {
+	height:100%;
+	margin:0;
+	padding:0;
+	border: 0 none;
+}
+body {
+	display:flex;
+	flex-direction: column;
+}
+#control {
+	display:flex;
+	details {
+		flex: 1 0 0;
+	}
+}
+#searchContainer {
+	& > fieldset {
+		display:flex;
+	}
+	fieldset {
+		padding:0;
+		margin:0;
+	}
+	fieldset[data-path="filter"] {
+		flex: 1 0 0;
+	}
+	fieldset[data-path="filter.genres"] {
+		flex: 1 0 0;
+		display:grid;
+		grid-template-columns: repeat(auto-fit, minmax(16ex, 1fr));
+		label {
+			display:flex;
+			cursor:pointer;
+
+			.selectable();
+			input {
+				display:none;
+			}
+			span {
+				flex: 1 0 0;
+			}
+			:checked + span {
+				.selected();
+			}
+		}
+	}
+}
+#tableWrapper {
+	flex: 1 0 0;
+	overflow:auto;
+	table {
+		width:100%;
+		tbody tr {
+			.zebra();
+			.selectable();
+		}
 	}
 }
 .anime_title {

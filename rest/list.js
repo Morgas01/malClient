@@ -24,22 +24,32 @@
 		);
 	},300,6000);
 
+	let runningUpdate=null;
 	module.exports={
 		update:function()
 		{
-			µ.logger.info("update list");
-			return SC.crawler.updateList()
-			.then(function()
+			if(!runningUpdate)
 			{
-				µ.logger.info("save list");
-				return saveListDataToFile();
-			})
-			.then(function()
-			{
-				return Promise.all(Object.values(SC.crawler.data).map(entry=>
-					SC.crawler.updateEntry(entry).then(saveListDataToFile)
-				));
-			});
+				µ.logger.info("update list");
+				runningUpdate=SC.crawler.updateList()
+				.then(function()
+				{
+					µ.logger.info("save list");
+					return saveListDataToFile();
+				})
+				.then(function()
+				{
+					return Promise.all(Object.values(SC.crawler.data).map(entry=>
+						SC.crawler.updateEntry(entry).then(saveListDataToFile)
+					))
+					.then(function()
+					{
+						runningUpdate=null;
+						return Object.values(SC.crawler.data);
+					});
+				});
+			}
+			return runningUpdate;
 		},
 		data:function()
 		{

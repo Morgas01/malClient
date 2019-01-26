@@ -83,6 +83,7 @@
 			{
 				let totalDuration=parseDuration(data.duration)*data.anime_num_episodes;
 				cell.textContent=getTimeString(totalDuration);
+				cell.title=totalDuration;
 				cell.dataset.column="total_duration";
 			}
 		});
@@ -100,33 +101,45 @@
 			console.log("sort time: "+(performance.now()-start));
 		}));
 
-		let searchConfig=new SC.Config.parse({
-			sort:/*[*/
-				{
-					column:{
-						type:"select",
-						values:["","title","score","episodes","duration","total Duration"]
-					},
-					direction:{
-						type:"select",
-						values:["ascending","descending"],
-						default:"ascending"
+		let form;
+		let formContainer=document.getElementById("searchContainer");
+		let updateForm=function()
+		{
+			if(form) form.remove();
+
+			let searchConfig=new SC.Config.parse({
+				sort:/*[*/
+					{
+						column:{
+							type:"select",
+							values:["","title","score","episodes","duration","total duration"]
+						},
+						direction:{
+							type:"select",
+							values:["ascending","descending"],
+							default:"descending"
+						}
+					}
+				/*]*/,
+				filter:{
+					genres:{
+						...table.getGroupParts("genres").sort().reduce((obj,genre)=>(obj[genre]=false,obj),{})
 					}
 				}
-			/*]*/,
-			filter:{
-				genres:{
-					...table.getGroupParts("genres").reduce((obj,genre)=>(obj[genre]=false,obj),{})
-				}
+			});
+
+			for(let [genre,model] of searchConfig.get(["filter","genres"]))
+			{
+				model.fieldFirst=true;
 			}
-		});
+			form=SC.form(searchConfig);
+			formContainer.appendChild(form);
+		};
+		updateForm();
 
-		let form=SC.form(searchConfig);
-		document.querySelector("#control").appendChild(form);
+		document.getElementById("tableWrapper").appendChild(table.getTable());
 
-		document.body.appendChild(table.getTable());
-
-		form.addEventListener("formChange",function(event)
+		formContainer.addEventListener("formChange",function(event)
 		{
 			let path=event.detail.path.slice();
 			let pathStep=path.shift();
@@ -161,18 +174,25 @@
 					return;
 			}
 			table.updateTable();
-		})
-/*
-		table.tableHeader.addEventListener("click",function(event)
+		});
+
+		document.getElementById("updateBtn").addEventListener("click",function()
 		{
-			if(event.target.tagName==="TH")
+			this.disabled=true;
+			rq.json("rest/list/update")
+			.then(data=>
 			{
-				let column=event.target.classList.value;
-				if(table.getSort()===column) table.setSort(null);
-				else table.setSort(column);
+				table.clear();
+				table.add(data);
 				table.updateTable();
-			}
-		});*/
+				updateForm();
+			},alert)
+			.always(()=>
+			{
+				this.disabled=false;
+			})
+		})
+
 	},alert);
 
 })(Morgas,Morgas.setModule,Morgas.getModule,Morgas.hasModule,Morgas.shortcut);
