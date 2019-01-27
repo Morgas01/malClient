@@ -149,10 +149,10 @@
 					switch(event.detail.key)
 					{
 						case "column":
-							table.setSort(event.detail.value,table.getSortReverse());
+							table.setSort(event.detail.value,form.getConfig().get(["sort","direction"]).get()==="descending");
 							break;
 						case "direction":
-							table.setSort(table.getSort(),event.detail.value);
+							table.setSort(table.getSort(),event.detail.value=="descending");
 							break;
 					}
 					break;
