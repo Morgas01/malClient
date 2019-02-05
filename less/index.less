@@ -24,13 +24,19 @@ body {
 		padding:0;
 		margin:0;
 	}
+	fieldset[data-path="sort"],fieldset[data-path="filter.genres"] {
+		border-width: 2px 0 0 0;
+		padding:0 1ex;
+	}
 	fieldset[data-path="filter"] {
 		flex: 1 0 0;
+		border-width: 2px 0 0 2px;
 	}
 	fieldset[data-path="filter.genres"] {
 		flex: 1 0 0;
-		display:grid;
-		grid-template-columns: repeat(auto-fit, minmax(16ex, 1fr));
+		display:flex;
+		flex-flow: row wrap;
+		justify-content:space-around;
 		label {
 			display:flex;
 			cursor:pointer;
@@ -41,6 +47,7 @@ body {
 			}
 			span {
 				flex: 1 0 0;
+				padding:.5ex
 			}
 			:checked + span {
 				.selected();
