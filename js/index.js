@@ -98,7 +98,7 @@
 			.addSort("episodes",SC.ORG.attributeSort("anime_num_episodes"))
 			.addSort("duration",SC.ORG.orderBy(data=>parseDuration(data.duration)))
 			.addSort("total duration",SC.ORG.orderBy(data=>parseDuration(data.duration)*data.anime_num_episodes));
-			console.log("sort time: "+(performance.now()-start));
+			µ.logger.debug("sort time: "+(performance.now()-start));
 		}));
 
 		let form;
