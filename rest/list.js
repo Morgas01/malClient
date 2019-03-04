@@ -22,7 +22,7 @@
 			()=>µ.logger.debug("saved list data "+storageFile.getAbsolutePath()),
 			(err)=> µ.logger.error("failed to save list data "+storageFile.getAbsolutePath(),err)
 		);
-	},300,6000);
+	},3E2,3E5);
 
 	let runningUpdate=null;
 	module.exports={
@@ -31,9 +31,11 @@
 			if(!runningUpdate)
 			{
 				µ.logger.info("update list");
+				let startDate=new Date();
 				runningUpdate=SC.crawler.updateList()
 				.then(function()
 				{
+					SC.crawler.removeOldEntries(startDate);
 					µ.logger.info("save list");
 					return saveListDataToFile();
 				})
