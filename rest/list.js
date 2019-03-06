@@ -22,7 +22,7 @@
 			()=>µ.logger.debug("saved list data "+storageFile.getAbsolutePath()),
 			(err)=> µ.logger.error("failed to save list data "+storageFile.getAbsolutePath(),err)
 		);
-	},3E2,3E5);
+	},5E3,3E5);
 
 	let runningUpdate=null;
 	module.exports={
