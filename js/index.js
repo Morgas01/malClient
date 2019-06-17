@@ -187,7 +187,7 @@
 				table.add(data);
 				table.updateTable();
 				updateForm();
-			},alert)
+			},error=>alert(JSON.stringify(e,null,"\t")))
 			.always(()=>
 			{
 				this.disabled=false;

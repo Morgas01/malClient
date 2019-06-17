@@ -6,7 +6,8 @@
 		FileUtil:"File/util",
 		errorSerializer:"errorSerializer",
 		group:"group",
-		niwaWorkDir:"niwaWorkDir"
+		niwaWorkDir:"niwaWorkDir",
+		Promise:"Promise"
 	});
 
 	let storageFile=new SC.File(SC.niwaWorkDir).changePath("work/"+worker.context+"/listData.json");
@@ -41,9 +42,9 @@
 				})
 				.then(function()
 				{
-					return Promise.all(Object.values(SC.crawler.data).map(entry=>
+					return SC.Promise.chain(Object.values(SC.crawler.data),entry=>
 						SC.crawler.updateEntry(entry).then(saveListDataToFile)
-					))
+					)
 					.then(function()
 					{
 						runningUpdate=null;
