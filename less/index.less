@@ -16,6 +16,9 @@ body {
 		flex: 1 0 0;
 	}
 }
+#updateBtn {
+	align-self:flex-start;
+}
 #searchContainer {
 	& > fieldset {
 		display:flex;
@@ -52,6 +55,12 @@ body {
 			:checked + span {
 				.selected();
 			}
+		}
+	}
+	fieldset[data-path="filter.ranges"] {
+		display:flex;
+		span {
+			vertical-align:top;
 		}
 	}
 }

@@ -27,6 +27,11 @@
 		return ("000"+h).slice(-4)+":"+("0"+m).slice(-2)+":"+("0"+s).slice(-2);
 	};
 
+	let getRangeGroup=function(duration,groups)
+	{
+		return groups.filter((g,i,a)=>i==0||duration>a[i-1].value).slice(-1).map(g=>g.key);
+	};
+
 	rq.json("rest/list/data")
 	.then(function(data)
 	{
@@ -82,14 +87,43 @@
 			styleClass:"total_duration",
 			fn:(cell,data)=>
 			{
-				let totalDuration=parseDuration(data.duration)*data.anime_num_episodes;
-				cell.textContent=getTimeString(totalDuration);
-				cell.title=totalDuration;
 				cell.dataset.column="total_duration";
+				let duration=parseDuration(data.duration);
+				if(isNaN(duration)||isNaN(data.anime_num_episodes))
+				{
+					cell.textContent="N/A";
+				}
+				else
+				{
+					let totalDuration=duration*data.anime_num_episodes;
+					cell.textContent=getTimeString(totalDuration);
+					cell.title=totalDuration;
+				}
 			}
 		});
 
-		table.addGroup("genres","genres").add(data);
+		table.addGroup("genres","genres")
+		.addGroup("duration",data=> getRangeGroup(parseDuration(data.duration),[
+			{key:"3min",value:180E3},
+			{key:"5min",value:300E3},
+			{key:"15min",value:900E3},
+			{key:"30min",value:180E4},
+			{key:">30min"}
+		]))
+		.addGroup("total duration",data=> getRangeGroup(parseDuration(data.duration)*data.anime_num_episodes,[
+			{key:"3H",value:108E5},
+			{key:"6H",value:216E5},
+			{key:"22H",value:792E5},
+			{key:">22H"}
+		]))
+		.addGroup("episode count",data=> getRangeGroup(data["anime_num_episodes"],[
+			{key:"8",value:8},
+			{key:"15",value:15},
+			{key:"34",value:34},
+			{key:"54",value:54},
+			{key:">54"}
+		]))
+		.add(data);
 
 		requestAnimationFrame(()=>requestAnimationFrame(()=>
 		{
@@ -125,6 +159,23 @@
 				filter:{
 					genres:{
 						...table.getGroupParts("genres").sort().reduce((obj,genre)=>(obj[genre]=false,obj),{})
+					},
+					ranges:{
+						duration:{
+							type:"select",
+							multiple:true,
+							values:["3min","5min","15min","30min",">30min"]
+						},
+						["total duration"]:{
+							type:"select",
+							multiple:true,
+							values:["3H","6H","22H",">22H"]
+						},
+						["episode count"]:{
+							type:"select",
+							multiple:true,
+							values:["8","15","34","54",">54"]
+						}
 					}
 				}
 			});
@@ -162,10 +213,13 @@
 					switch(pathStep)
 					{
 						case "genres":
-							let groupParts=table.getGroups()["genres"]||[];
-							if(event.detail.value) groupParts.push(event.detail.key);
-							else SC.remove(groupParts,event.detail.key);
-							table.setGroup("genres",groupParts);
+							let parts=Object.entries(form.getConfig().get(event.detail.path).get())
+							.filter(([k,v])=>v)
+							.map(([k,v])=>k);
+							table.setGroup("genres",parts,false);
+							break;
+						case "ranges":
+							table.setGroup(event.detail.key,event.detail.value,true);
 							break;
 						default:
 							return;

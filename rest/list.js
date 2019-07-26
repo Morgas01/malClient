@@ -42,9 +42,12 @@
 				})
 				.then(function()
 				{
-					return SC.Promise.chain(Object.values(SC.crawler.data),entry=>
-						SC.crawler.updateEntry(entry).then(saveListDataToFile)
-					)
+					let entries=Object.values(SC.crawler.data).filter(SC.crawler.checkUpdateEntry);
+					return SC.Promise.chain(entries,(entry,index)=>
+					{
+						if(index%10==0) µ.logger.info(`updating ${index}/${entries.length}`);
+						return SC.crawler.updateEntry(entry).then(saveListDataToFile);
+					})
 					.then(function()
 					{
 						runningUpdate=null;
