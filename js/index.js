@@ -241,7 +241,7 @@
 				table.add(data);
 				table.updateTable();
 				updateForm();
-			},error=>alert(JSON.stringify(e,null,"\t")))
+			},error=>alert(JSON.stringify(error,null,"\t")))
 			.always(()=>
 			{
 				this.disabled=false;
