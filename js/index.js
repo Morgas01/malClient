@@ -7,7 +7,8 @@
 		ORG:"Organizer",
 		Config:"Config",
 		form:"gui.form",
-		remove:"array.remove"
+		remove:"array.remove",
+		fuzzy:"fuzzySearch"
 	});
 
 	let parseDuration=function(duration)
@@ -35,7 +36,7 @@
 	rq.json("rest/list/data")
 	.then(function(data)
 	{
-		let table=new SC.Table();
+	let table=new SC.Table();
 		let tableConfig=table.tableConfig;
 		tableConfig.addColumn({
 			name:"name",
@@ -157,6 +158,9 @@
 					}
 				/*]*/,
 				filter:{
+					search:{
+						type:"string"
+					},
 					genres:{
 						...table.getGroupParts("genres").sort().reduce((obj,genre)=>(obj[genre]=false,obj),{})
 					},
@@ -222,6 +226,17 @@
 							table.setGroup(event.detail.key,event.detail.value,true);
 							break;
 						default:
+							if(event.detail.key==="search")
+							{
+								let search=form.getConfig().get(event.detail.path).get(event.detail.key).get();
+								if(!table.hasFilter(search))
+								{
+									let matcher=SC.fuzzy.scoreFunctions.misc.query(search);
+									table.addFilter(search,d=>matcher(d.anime_title)>0)
+								}
+								table.setFilter(search);
+								break;
+							}
 							return;
 					}
 					break;
