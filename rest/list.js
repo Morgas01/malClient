@@ -6,11 +6,10 @@
 		FileUtil:"File/util",
 		errorSerializer:"errorSerializer",
 		group:"group",
-		niwaWorkDir:"niwaWorkDir",
 		Promise:"Promise"
 	});
 
-	let storageFile=new SC.File(SC.niwaWorkDir).changePath("work/"+worker.context+"/listData.json");
+	let storageFile=new SC.File(worker.shed).changePath("listData.json");
 
 	let saveListDataToFile=SC.group(function()
 	{
@@ -64,7 +63,8 @@
 	};
 
 	µ.logger.info("check list");
-	storageFile.exists()
+	SC.FileUtil.enshureDir(worker.shed)
+	.then(()=>storageFile.exists())
 	.then(function()
 	{
 		µ.logger.info("load list");

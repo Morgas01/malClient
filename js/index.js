@@ -17,7 +17,7 @@
 		let match=duration.match(/(?:(\d+)\s*hr\.\s*)?(?:(\d+)\s*min\.\s*)?(?:(\d+)\s*sec\.\s*)?/);
 		if(!match||match[1]==""&&match[2]=="") return NaN;
 		return (match[1]||0)*36E5+(match[2]||0)*6E4+(match[3]||0)*1E3;
-	}
+	};
 
 
 	let getTimeString=function(time)

@@ -6,8 +6,11 @@
 out/
 target/
 node_modules/
-build/
 *.log
-build.js
-css/
+storages/
+
+js/
+less/
+buildTools/
+gulpfile.js
 package-lock.json
